@@ -128,10 +128,10 @@ class page_base {
 			
 				<article>
 					<h3>Ptits-Bouts-De-Choux</h3>
-										<p>12 rue des gones</br>
+										<p>12 rue des gosses</br>
 										49000 ANGERS</br>
 										Tel : 02.41.27.11.71</br>
-										Mail : pbdc49@gmai.com</p>
+										Mail : pbdc49@gmail.com</p>
 										
 											<a  href="contact.php" class="button">Contact</a>
                 </article>
@@ -146,7 +146,7 @@ class page_base {
 			<footer>
 				<p>Site de la crèche des petits bouts de Choux -  ANGERS </p>
 				<p id="copyright">
-				créé par _____________________________________________
+				créé par Bouhours Natacha, Teillet Quentin et Menant Kévin
 				SSII 1FO@SIO - technologies mises en oeuvre PHP objet - jquery - Ajax
 				<a href="http://chevrollier.e-lyco.fr/">Chevrollier</a> 
 				</p>
