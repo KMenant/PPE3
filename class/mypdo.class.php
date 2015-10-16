@@ -52,19 +52,42 @@ class mypdo extends PDO{
     	}
     	return null;
     }
+    
+    public function trouve_enfant($idfamille)
+    {
+        $requete='select * from enfant where id_famille='.$idfamille.';';
+        $result=$this->connexion ->query($requete);
+        if ($result)
+        {
+            return ($result->fetch(PDO::FETCH_OBJ));
+        }
+        return null;
+    }
+    
+    public function liste_enfant()
+    {
+        $requete='select * from enfant ;';
+        $result=$this->connexion ->query($requete);
+        if ($result)
+        {
+            return ($result->fetch(PDO::FETCH_OBJ));
+        }
+        return null;
+    }
+    
     public function trouve_famille($idfamille)
     {
-    	$requete='select * from famille where id_famille='.$idfamille.';';
-    	$result=$this->connexion ->query($requete);
-    	if ($result)
+        $requete='select * from famille where id_famille='.$idfamille.';';
+        $result=$this->connexion ->query($requete);
+        if ($result)
     
-    	{
-    		if ($result-> rowCount()==1)
-    		{
-    			return ($result->fetch(PDO::FETCH_OBJ));
-    		}
-    	}
-    	return null;
+        {
+            if ($result-> rowCount()==1)
+            {
+                return ($result->fetch(PDO::FETCH_OBJ));
+            }
+        }
+        return null;
     }
     
     public function insert_famille_admin($tab)

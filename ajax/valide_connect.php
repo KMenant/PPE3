@@ -3,8 +3,8 @@ session_start();
 
 include_once('../class/autoload.php');
 
-$errors         = array();  	
-$data 			= array(); 		
+$errors         = array();
+$data 			= array();
 $data['success']=false;
 
 
@@ -36,12 +36,12 @@ else
 if ( ! empty($errors)) {
 	$data['success'] = false;
 	$data['errors']  = $errors;
-} else {
+} 
+else {
 	if($data['success'])
-	{
 		$data['message'] = "Vous êtes bien connecté  !";
-
-	}
 }
+
+
 echo json_encode($data);
 ?>
