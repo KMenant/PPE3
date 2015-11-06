@@ -99,13 +99,32 @@ class page_base {
 				<li><a   href="reglement.php" >Le reglement</a></li>';
 		if(!(isset($_SESSION['id']) && isset($_SESSION['type'])))
 		{	
-			echo '
-				<li><a  class="bouton_droite" href="connect.php">Connexion</a></li>';
+			echo '<li><a  class="bouton_droite" href="connect.php">Connexion</a></li>';
 		} 
 		else
 		{
-			echo '
-				<li><a  class="bouton_droite" href="deconnect.php">Déconnexion</a></li>';
+			if ($_SESSION['type']=='famille'){
+				echo '<li><a href="modif_famille.php">Gestion de la Familles </a>
+						<li><a href="">Gestion des Enfants </a>
+							<ul>
+									<li><a href="ajout_enfant.php">Inscrire un enfant</a></li>
+									<li><a href="suppr_enfant.php">Désinscrire un enfant</a></li>
+									<li><a href="liste_enfant.php">Consulter les enfants</a></li>
+							</ul>
+						</li>';
+			}
+			else if ($_SESSION['type']=='admin'){
+				echo '<li><a href="">Gestion des Familles </a>
+						<ul>
+							<li><a href="ajout_famille.php">Inscrire une famille</a></li>
+							<li><a href="modif_famille.php">Modifier une famille</a></li>
+						</ul>
+					</li>';
+			}
+			else if ($_SESSION['type']=='perso'){
+				echo '';
+			}
+			echo '<li><a  class="bouton_droite" href="deconnect.php">Déconnexion</a></li>';
 		}
 	}
 	public function affiche_entete_menu() {

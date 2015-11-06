@@ -203,6 +203,7 @@ class controleur {
 
 		</article>';
 	}
+
 	public function retourne_article_accueil()
 	{
 		return'
@@ -349,7 +350,7 @@ class controleur {
 							if($("input[type=radio][name=rblogin]:checked").attr("value")=="rbf"){$categ="famille";}
 							if($("input[type=radio][name=rblogin]:checked").attr("value")=="rba"){$categ="admin";}
 							var formData = {
-								"id" 					: $("#id").val().toUpperCase(),
+								"id" 					: $("#id").val(),
 								"mp"					: $("#mp").val(),
 								"categ"					: $categ												   		
 							};	
@@ -481,7 +482,7 @@ class controleur {
 		return $mdp;
 	}
 
-	public function retourne_formulaire_enfant($type,$idenfant="") 
+	public function retourne_formulaire_enfant($type,$idenfant) 
 	{
 		$form = '';
 		$nom = '';
@@ -502,7 +503,7 @@ class controleur {
 			$libelbutton = 'Modifier';
 		}
 		if ($type == 'Supp' || $type == 'Modif') {
-			$row = $this->vpdo->trouve_enfant ( $_SESSION['id'] );
+			$row = $this->vpdo->trouve_enfant ( $idenfant );
 			if ($row != null) {
 				$nom = $row->nom;
 				$prenom = $row->prenom;
@@ -517,7 +518,6 @@ class controleur {
 		<article >
 			<h3>' . $titreform . '</h3>
 			<form id="formenfant" method="post" >
-				</br>Représentant légal 1</br></br>
 				<input type="text" name="nom" id="nom" placeholder="Nom de l\'enfant" value="' . $nom . '" required/>
 				<input type="text" name="prenom" id="prenom" placeholder="Prenom de l\'enfant" value="' . $prenom . '" required/></br>
 				<input type="text" name="specificite" id="specificite" placeholder="Specificite de l\'enfant" value="' . $specificite . '" required/>
@@ -534,7 +534,7 @@ class controleur {
 		<article>
 			<script>
 				$("#modal").hide();
-		//Initialize the tooltips
+				//Initialize the tooltips
 				$("#formenfant :input").tooltipster({
 					trigger: "custom",
 					onlyOne: false,
@@ -550,7 +550,8 @@ class controleur {
 							regexp.lastIndex = 0;
 						return this.optional(element) || regexp.test(value);
 					},"erreur champs non valide"
-					);
+				);
+
 		$("#formenfant").submit(function( e ){
 			e.preventDefault();
 			$("#modal").hide();
@@ -563,7 +564,10 @@ class controleur {
 				var formData = {
 					"nom" 					: $("#nom").val().toUpperCase(),
 					"prenom"				: $("#prenom").val(),
+					"specificite"			: $("#specificite").val(),
 					"commentaire"			: $("#commentaire").val(),
+					if(isset($_GET["id_enfant"]))
+					"id_enfant"			: $_GET["id_enfant"],
 				};
 				
 				var filterDataRequest = $.ajax(
@@ -698,7 +702,63 @@ class controleur {
 		return $retour;
 	}
 
-	public function retourne_formulaire_famille($type,$idfamille="") {
+	public function affiche_liste_enfant_famille() 
+	{
+		$retour = '
+		<style type="text/css">
+			table {border-collapse: collapse;}
+			tr:nth-of-type(odd) {background: #eee;}
+			tr:nth-of-type(even) {background: #eff;}
+			tr{color: black;}
+			th {background: #333;color: white;}
+			td, th {padding: 6px;border: 1px solid #ccc;}
+		</style>
+		<article >
+			<form method="post">
+				<table>
+					<thead>
+						<tr>
+							<th >id</th>
+							<th >Nom</th>
+							<th >Prénom</th>
+							<th >Specificite</th>
+							<th ></th>
+							<th ></th>
+						</tr>
+					</thead>
+					<tbody >';
+					$result = $this->vpdo->liste_enfant_famille ( $_SESSION['id'] );
+					if ($result != false) {
+						while ( $row = $result->fetch(PDO::FETCH_OBJ))
+						// parcourir chaque ligne sélectionnée
+						{
+								
+							$retour = $retour . '<tr>
+							<td>' . $row->id_enfant . '</td>
+							<td>' . $row->nom . '</td>
+							<td>' . $row->prenom . '</td>
+							<td>' . $row->specificite . '</td>
+								
+							<td Align=center>
+								<a href="modif_enfant.php?id_enfant=' . $row->id_enfant . '" class="button">Modifier</a>
+							</td>
+								
+							<td Align=center>
+								<a href="supp_enfant.php?id_enfant=' . $row->id_enfant . '" class="button">Desinscrire</a>
+							</td>
+						</tr>';
+						}
+					}
+					$retour = $retour . '
+					</tbody>
+				</table>
+			</form>
+		</article>';
+		return $retour;
+	}
+
+	public function retourne_formulaire_famille($type,$idfamille="")
+	{
 		$form = '';
 		$identifiant='';
 		$nom1 = '';
@@ -819,23 +879,23 @@ class controleur {
 			<article >
 				<h3>' . $titreform . '</h3>
 				<form id="formfamille" method="post" >';
-		if ($type == 'Ajout') {
-			$vmp=$this->genererMDP();
-			$form = $form . '
-					<div >
-					Identifiant : <input type="text" name="identifiant" id="identifiant" placeholder="Identifiant famille" value="' . $identifiant . '" required/></br>
-					Mot de passe : <input type="text" readonly name="mp" id="mp" value="' . $vmp . '"></br>
-					</div>
-					
-			';		
-		}
-		else {
-			$form = $form . '
-			<div style="visibility: hidden;">
-					Identifiant : <input type="text" name="identifiant" id="identifiant" placeholder="Identifiant famille" value="' . $identifiant . '" required/></br>
-					Mot de passe : <input type="text"  name="mp" id="mp" value=""></br>
-					</div>
-							';
+					if ($type == 'Ajout') {
+						$vmp=$this->genererMDP();
+						$form = $form . '
+							<div >
+								Identifiant : <input type="text" name="identifiant" id="identifiant" placeholder="Identifiant famille" value="' . $identifiant . '" required/></br>
+								Mot de passe : <input type="text" readonly name="mp" id="mp" value="' . $vmp . '"></br>
+							</div>
+								
+						';		
+					}
+					else {
+						$form = $form . '
+							<div style="visibility: hidden;">
+								Identifiant : <input type="text" name="identifiant" id="identifiant" placeholder="Identifiant famille" value="' . $identifiant . '" required/></br>
+								Mot de passe : <input type="text"  name="mp" id="mp" value=""></br>
+							</div>
+				';
 		}
 		$form = $form . ' 
 					</br>Représentant légal 1</br></br>
@@ -875,9 +935,9 @@ class controleur {
 				</form>
 				<script>function hd(){ $(\'#modal\').hide();}</script>
 				<div  id="modal" >
-										<h1>Informations !</h1>
-										<div id="dialog1" ></div>
-										<a class="no" onclick="hd();">OK</a>
+					<h1>Informations !</h1>
+					<div id="dialog1" ></div>
+					<a class="no" onclick="hd();">OK</a>
 				</div>
 			<article >
 				<script>

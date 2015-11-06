@@ -48,15 +48,15 @@ class mypdo extends PDO{
     	{
     		if ($result-> rowCount()==1)
     		{
-    			return ($result);
+    			return ($result->fetch(PDO::FETCH_OBJ));
     		}
     	}
     	return null;
     }
     
-    public function trouve_enfant($idfamille)
+    public function trouve_enfant($idenfant)
     {
-        $requete='select * from enfant where id_famille='.$idfamille.';';
+        $requete='select * from enfant where id_enfant='.$idenfant.';';
         $result=$this->connexion ->query($requete);
         if ($result)
         {
@@ -71,9 +71,28 @@ class mypdo extends PDO{
         $result=$this->connexion ->query($requete);
         if ($result)
         {
-            return ($result->fetch(PDO::FETCH_OBJ));
+            if($result -> rowCount()==0)
+                return false;
+
+            return $result;
         }
-        return null;
+
+        return false;
+    }
+    
+    public function liste_enfant_famille($idfamille)
+    {
+        $requete='select * from enfant where id_famille='.$idfamille.';';
+        $result=$this->connexion ->query($requete);
+        if ($result)
+        {
+            if($result -> rowCount()==0)
+                return false;
+
+            return $result;
+        }
+
+        return false;
     }
     
     public function trouve_famille($idfamille)
@@ -91,60 +110,162 @@ class mypdo extends PDO{
         return null;
     }
     
-    public function insert_famille_admin($tab)
+    public function insert_enfant_famille($tab)
     {
-     	
-    	$errors         = array();  	
-    	$data 			= array(); 		
+        
+        $errors         = array();      
+        $data           = array();      
     
-    	// attention le mot de passe est en clair tant que le mail de confirmation  n'est pas envoyé
-    	$requete='INSERT INTO famille (identifiant,mp,nom1,prenom1,adresse11,adresse12,cp1,ville1,mail1,tel11,tel12,tel13,fonction1, nom2,prenom2,adresse21,adresse22,cp2,ville2,mail2,tel21,tel22,tel23,fonction2)
-		VALUES ('
-    			.$this->connexion ->quote($tab['identifiant']) .','
-    			.'MD5('.$this->connexion ->quote($tab['mp']) .'),'
-    			.$this->connexion ->quote($tab['nom1']) .','
-    			.$this->connexion ->quote($tab['prenom1']) .','
-    			.$this->connexion ->quote($tab['adresse11']) .','
-    			.$this->connexion ->quote($tab['adresse12']) .','
-    			.$this->connexion ->quote($tab['cp1']) .','
-    			.$this->connexion ->quote($tab['ville1']) .','
-    			.$this->connexion ->quote($tab['mail1']) .','
-    			.$this->connexion ->quote($tab['tel11']) .','
-    			.$this->connexion ->quote($tab['tel12']) .','
-    			.$this->connexion ->quote($tab['tel13']) .','
-    			.$this->connexion ->quote($tab['fonction1']) .','
-    			.$this->connexion ->quote($tab['nom2']) .','
-    			.$this->connexion ->quote($tab['prenom2']) .','
-    			.$this->connexion ->quote($tab['adresse21']) .','
-    			.$this->connexion ->quote($tab['adresse22']) .','
-    			.$this->connexion ->quote($tab['cp2']) .','
-    			.$this->connexion ->quote($tab['ville2']) .','
-    			.$this->connexion ->quote($tab['mail2']) .','
-    			.$this->connexion ->quote($tab['tel21']) .','
-    			.$this->connexion ->quote($tab['tel22']) .','
-    			.$this->connexion ->quote($tab['tel23']) .','
-    			.$this->connexion ->quote($tab['fonction2'])
-    		.');';
+        // attention le mot de passe est en clair tant que le mail de confirmation  n'est pas envoyé
+        $requete='INSERT INTO enfant (nom,prenom,specificite,id_famille)
+        VALUES ('
+                .$this->connexion ->quote($tab['nom']) .','
+                .$this->connexion ->quote($tab['prenom']) .','
+                .$this->connexion ->quote($tab['specificite']) .','
+                .$this->connexion ->quote($tab['id_famille']) .');';
     
     
     
-    	$nblignes=$this->connexion -> exec($requete);
-    	if ($nblignes !=1)
-    	{
-    		$errors['requete']='Pbs insertion famille :'.$requete;
-    	}
+        $nblignes=$this->connexion -> exec($requete);
+        if ($nblignes !=1)
+        {
+            $errors['requete']='Pbs insertion enfant :'.$requete;
+        }
  
     
     
-    	if ( ! empty($errors)) {
-    		$data['success'] = false;
-    		$data['errors']  = $errors;
-    	} else {
+        if ( ! empty($errors)) {
+            $data['success'] = false;
+            $data['errors']  = $errors;
+        } else {
     
-    		$data['success'] = true;
-    		$data['message'] = 'Insertion famille ok!';
-    	}
-    	return $data;
+            $data['success'] = true;
+            $data['message'] = 'Insertion enfant ok!';
+        }
+        return $data;
+    }
+    
+    public function modif_enfant_famille($tab)
+    {
+    
+         
+        $errors         = array();
+        $data           = array();
+    
+        $requete='update enfant '
+        .'set nom='.$this->connexion ->quote($tab['nom']) .','
+        .'prenom='.$this->connexion ->quote($tab['prenom']) .','
+        .'specificite='.$this->connexion ->quote($tab['specificite'])
+        .' where id_enfant='.$this->connexion ->quote($tab['id_enfant']) .';';
+
+     $nblignes=$this->connexion -> exec($requete);
+        if ($nblignes !=1)
+        {
+            $errors['requete']='Pas de modifications d\'information :'.$requete;
+        }
+    
+    
+    
+        if ( ! empty($errors)) {
+            $data['success'] = false;
+            $data['errors']  = $errors;
+        } else {
+    
+            $data['success'] = true;
+            $data['message'] = 'Modification famille ok!';
+        }
+        return $data;
+    }
+    
+    public function supp_enfant_famille($tab)
+    {
+        
+        $errors         = array();      
+        $data           = array();      
+    
+        // attention le mot de passe est en clair tant que le mail de confirmation  n'est pas envoyé
+        $requete='INSERT INTO enfant (nom,prenom,specificite,id_famille)
+        VALUES ('
+                .$this->connexion ->quote($tab['nom']) .','
+                .$this->connexion ->quote($tab['prenom']) .','
+                .$this->connexion ->quote($tab['specificite']) .','
+                .$this->connexion ->quote($tab['id_famille']) .');';
+    
+    
+    
+        $nblignes=$this->connexion -> exec($requete);
+        if ($nblignes !=1)
+        {
+            $errors['requete']='Pbs insertion enfant :'.$requete;
+        }
+ 
+    
+    
+        if ( ! empty($errors)) {
+            $data['success'] = false;
+            $data['errors']  = $errors;
+        } else {
+    
+            $data['success'] = true;
+            $data['message'] = 'Insertion enfant ok!';
+        }
+        return $data;
+    }
+    
+    public function insert_famille_admin($tab)
+    {
+        
+        $errors         = array();      
+        $data           = array();      
+    
+        // attention le mot de passe est en clair tant que le mail de confirmation  n'est pas envoyé
+        $requete='INSERT INTO famille (identifiant,mp,nom1,prenom1,adresse11,adresse12,cp1,ville1,mail1,tel11,tel12,tel13,fonction1, nom2,prenom2,adresse21,adresse22,cp2,ville2,mail2,tel21,tel22,tel23,fonction2)
+        VALUES ('
+                .$this->connexion ->quote($tab['identifiant']) .','
+                .'MD5('.$this->connexion ->quote($tab['mp']) .'),'
+                .$this->connexion ->quote($tab['nom1']) .','
+                .$this->connexion ->quote($tab['prenom1']) .','
+                .$this->connexion ->quote($tab['adresse11']) .','
+                .$this->connexion ->quote($tab['adresse12']) .','
+                .$this->connexion ->quote($tab['cp1']) .','
+                .$this->connexion ->quote($tab['ville1']) .','
+                .$this->connexion ->quote($tab['mail1']) .','
+                .$this->connexion ->quote($tab['tel11']) .','
+                .$this->connexion ->quote($tab['tel12']) .','
+                .$this->connexion ->quote($tab['tel13']) .','
+                .$this->connexion ->quote($tab['fonction1']) .','
+                .$this->connexion ->quote($tab['nom2']) .','
+                .$this->connexion ->quote($tab['prenom2']) .','
+                .$this->connexion ->quote($tab['adresse21']) .','
+                .$this->connexion ->quote($tab['adresse22']) .','
+                .$this->connexion ->quote($tab['cp2']) .','
+                .$this->connexion ->quote($tab['ville2']) .','
+                .$this->connexion ->quote($tab['mail2']) .','
+                .$this->connexion ->quote($tab['tel21']) .','
+                .$this->connexion ->quote($tab['tel22']) .','
+                .$this->connexion ->quote($tab['tel23']) .','
+                .$this->connexion ->quote($tab['fonction2'])
+            .');';
+    
+    
+    
+        $nblignes=$this->connexion -> exec($requete);
+        if ($nblignes !=1)
+        {
+            $errors['requete']='Pbs insertion famille :'.$requete;
+        }
+ 
+    
+    
+        if ( ! empty($errors)) {
+            $data['success'] = false;
+            $data['errors']  = $errors;
+        } else {
+    
+            $data['success'] = true;
+            $data['message'] = 'Insertion famille ok!';
+        }
+        return $data;
     }
 
     public function modif_famille_admin($tab)
@@ -180,10 +301,10 @@ class mypdo extends PDO{
  		.' where identifiant='.$this->connexion ->quote($tab['identifiant']) .';';
 
      $nblignes=$this->connexion -> exec($requete);
-    if ($nblignes !=1)
-    {
-    	$errors['requete']='Pas de modifications d\'information :'.$requete;
-    }
+        if ($nblignes !=1)
+        {
+        	$errors['requete']='Pas de modifications d\'information :'.$requete;
+        }
     
     
     
@@ -197,8 +318,6 @@ class mypdo extends PDO{
     	}
     	return $data;
     }
-    
-
     
     public function liste_famille()
     {

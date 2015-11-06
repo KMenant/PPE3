@@ -1,5 +1,5 @@
 <?php
-class page_base_securisee_admin extends page_base_securisee_famille {
+class page_base_securisee_admin extends page_base {
 
 	public function __construct($p) {
 		parent::__construct($p);

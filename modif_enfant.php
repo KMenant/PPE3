@@ -14,7 +14,7 @@ $site->style='perso';
 $controleur=new controleur();
 
 $site-> right_sidebar=$site-> rempli_right_sidebar();
-$site-> left_sidebar=$controleur->retourne_formulaire_famille('Ajout');
+$site-> left_sidebar=$controleur->retourne_formulaire_enfant('Modif',$_GET["id_enfant"]);
 
 $site->affiche();
 ?>
