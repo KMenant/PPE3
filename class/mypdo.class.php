@@ -33,17 +33,18 @@ class mypdo extends PDO{
     	}
     }
     
-    public function connect($tab)
+    public function connect($tab) 
     {
-    if($tab['categ']=='famille'){	
-    	$requete='select * from famille where identifiant="'.$tab['id'].'" and mp=MD5("'.$tab['mp'].'");';
-    }
-    else{
-    	$requete='select * from administrateur where identifiant="'.$tab['id'].'" and mp=MD5("'.$tab['mp'].'");';
-    }
+        if($tab['categ']=='famille') 
+        {	
+        	$requete='select * from famille where identifiant="'.$tab['id'].'" and mp=MD5("'.$tab['mp'].'");';
+        }
+        else 
+        {
+        	$requete='select * from administrateur where identifiant="'.$tab['id'].'" and mp=MD5("'.$tab['mp'].'");';
+        }
     	$result=$this->connexion ->query($requete);
     	if ($result)
-    
     	{
     		if ($result-> rowCount()==1)
     		{

@@ -22,8 +22,14 @@ $tab['categ']=$_POST['categ'];
 $resultat = $mypdo->connect($tab);
 if(isset($resultat))
 {
-	$_SESSION['id']=$tab['id'];
 	$_SESSION['type']=$tab['categ'];
+	
+	if($tab['categ']=="famille")
+		$_SESSION['id']=$resultat->id_famille;
+	else if($tab['categ']=="admin")
+		$_SESSION['id']=$resultat->id;
+	else if($tab['categ']=="perso")
+		$_SESSION['id']=$resultat->id_personnel;
 	$data['success']=true;
 }
 else

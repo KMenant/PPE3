@@ -13,14 +13,21 @@ $site->style='perso';
 
 $controleur=new controleur();
 $site-> right_sidebar=$site-> rempli_right_sidebar();
-$site-> left_sidebar=$controleur->affiche_liste_famille('Modif');
-if (isset($_POST["nom_checkbox"])){
-foreach ($_POST["nom_checkbox"] as $index => $value){
-	$site-> left_sidebar=$controleur->retourne_formulaire_famille('Modif',$value);
-	$_SESSION['id_eleve']=$value;
-	break;
+
+if ($_SESSION['type']=="admin"){
+	$site-> left_sidebar=$controleur->affiche_liste_famille('Modif');
+	if (isset($_POST["nom_checkbox"])){
+		foreach ($_POST["nom_checkbox"] as $index => $value){
+			$site-> left_sidebar=$controleur->retourne_formulaire_famille('Modif',$value);
+			$_SESSION['id_eleve']=$value;
+			break;
+		}
+	}
 }
-}
+
+else if ($_SESSION['type']=="famille")
+	$site-> left_sidebar=$controleur->retourne_formulaire_famille('Modif',$_SESSION['id']);
+
 
 $site->affiche();
 
