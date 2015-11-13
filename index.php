@@ -1,18 +1,9 @@
 <?php
-session_start();
-include_once('class/autoload.php');
+	session_start();
+	include_once('class/autoload.php');
 	
-	$site = new page_base('Accueil');
 	
-	if(isset($_SESSION['id']) && isset($_SESSION['type'])){
-		if ($_SESSION['type']=='famille'){
-			$site = new page_base_securisee_famille('Accueil');
-		}
-		if ($_SESSION['type']=='admin'){
-			$site = new page_base_securisee_admin('Accueil');
-		}
-	}
-		
+	$site = new page_base('Accueil');		
 	$site->js='jssor.core';
 	$site->js='jssor.utils';
 	$site->js='jssor.slider';

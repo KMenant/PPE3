@@ -108,8 +108,7 @@ class page_base {
 						<li><a href="">Gestion des Enfants </a>
 							<ul>
 									<li><a href="ajout_enfant.php">Inscrire un enfant</a></li>
-									<li><a href="suppr_enfant.php">Désinscrire un enfant</a></li>
-									<li><a href="liste_enfant.php">Consulter les enfants</a></li>
+									<li><a href="liste_enfant.php">Consulter vos enfants</a></li>
 							</ul>
 						</li>';
 			}

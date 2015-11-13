@@ -3,7 +3,7 @@
 	include_once('class/autoload.php');
 
 
-	$site = new page_base('Ajout famille');
+	$site = new page_base('Liste enfants');
 	$site->js='jquery.validate.min';
 	$site->js='messages_fr';
 	$site->js='jquery.tooltipster.min';

@@ -23,6 +23,8 @@ $tab['prenom']=$_POST['prenom'];
 $tab['specificite']=$_POST['specificite'];
 $tab['id_enfant']=$_POST['id_enfant'];
 
+echo($tab);
+
 $data=$mypdo->modif_enfant_famille($tab);
 
 echo json_encode($data);

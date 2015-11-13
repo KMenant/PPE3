@@ -117,7 +117,7 @@ class mypdo extends PDO{
         $data           = array();      
     
         // attention le mot de passe est en clair tant que le mail de confirmation  n'est pas envoyé
-        $requete='INSERT INTO enfant (nom,prenom,specificite,id_famille)
+        $requete='INSERT INTO enfant (nom, prenom, specificite, id_famille)
         VALUES ('
                 .$this->connexion ->quote($tab['nom']) .','
                 .$this->connexion ->quote($tab['prenom']) .','
@@ -147,32 +147,28 @@ class mypdo extends PDO{
     
     public function modif_enfant_famille($tab)
     {
-    
          
         $errors         = array();
         $data           = array();
     
-        $requete='update enfant '
-        .'set nom='.$this->connexion ->quote($tab['nom']) .','
-        .'prenom='.$this->connexion ->quote($tab['prenom']) .','
-        .'specificite='.$this->connexion ->quote($tab['specificite'])
-        .' where id_enfant='.$this->connexion ->quote($tab['id_enfant']) .';';
+        $requete='update enfant set nom='.$this->connexion ->quote($tab['nom']) .', prenom='.$this->connexion ->quote($tab['prenom']) .','
+        .' specificite='.$this->connexion ->quote($tab['specificite']).' where id_enfant='.$this->connexion ->quote($tab['id_enfant']) .';';
 
-     $nblignes=$this->connexion -> exec($requete);
+        $nblignes=$this->connexion -> exec($requete);
+
         if ($nblignes !=1)
         {
             $errors['requete']='Pas de modifications d\'information :'.$requete;
         }
     
-    
-    
         if ( ! empty($errors)) {
             $data['success'] = false;
             $data['errors']  = $errors;
-        } else {
+        } 
+        else {
     
             $data['success'] = true;
-            $data['message'] = 'Modification famille ok!';
+            $data['message'] = 'Modification enfant ok!';
         }
         return $data;
     }
@@ -183,20 +179,14 @@ class mypdo extends PDO{
         $errors         = array();      
         $data           = array();      
     
-        // attention le mot de passe est en clair tant que le mail de confirmation  n'est pas envoyé
-        $requete='INSERT INTO enfant (nom,prenom,specificite,id_famille)
-        VALUES ('
-                .$this->connexion ->quote($tab['nom']) .','
-                .$this->connexion ->quote($tab['prenom']) .','
-                .$this->connexion ->quote($tab['specificite']) .','
-                .$this->connexion ->quote($tab['id_famille']) .');';
+        $requete='DELETE FROM enfant WHERE id_enfant='.$this->connexion ->quote($tab['id_enfant']) .';';
     
     
     
         $nblignes=$this->connexion -> exec($requete);
         if ($nblignes !=1)
         {
-            $errors['requete']='Pbs insertion enfant :'.$requete;
+            $errors['requete']='Pbs suppression enfant :'.$requete;
         }
  
     
@@ -207,7 +197,7 @@ class mypdo extends PDO{
         } else {
     
             $data['success'] = true;
-            $data['message'] = 'Insertion enfant ok!';
+            $data['message'] = 'Enfant supprimée !';
         }
         return $data;
     }
